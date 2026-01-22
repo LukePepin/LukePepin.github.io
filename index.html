@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            background-color: #ddd; /* Replace with <img src="photo.jpg"> later */
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        h1 { margin: 0 0 10px; font-size: 24px; }
+        p { color: #666; margin-bottom: 30px; line-height: 1.5; }
+        .btn {
+            display: inline-block;
+            background: #0070f3;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 5px;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #0051a2; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+        .btn-outline:hover { border-color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="profile-img"></div> 
+        
+        <h1>Your Name</h1>
+        <p>Cybersecurity Specialist & Systems Engineer.<br>Currently building tools for automation and resilience.</p>
+        
+        <a href="https://github.com/yourusername" class="btn">GitHub</a>
+        <a href="mailto:you@example.com" class="btn btn-outline">Contact</a>
+    </div>
+
+</body>
+</html>
