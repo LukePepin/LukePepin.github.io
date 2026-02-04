@@ -3,68 +3,772 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <title>SentryC2 - Edge-First Industrial Resilience</title>
+    <meta name="description" content="Sustaining Industrial Operations in Disconnected Environments. SentryC2 reduces MTTR by ≥50% using Edge-First MANET architecture.">
+    <link rel="icon" type="image/png" href="SentryC2 - logo 1_1-dark.png">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            color: #333;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
+
+        :root {
+            --gunmetal: #3A4B55;
+            --deep-void: #0F1215;
+            --cyan: #ADFFFA;
+            --industrial-gray: #9999A1;
+            --sentry-gold: #FFC857;
+            --kill-switch-red: #C5283D;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--deep-void);
+            color: var(--industrial-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
             width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            background-color: #ddd; /* Replace with <img src="photo.jpg"> later */
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: block;
+
+        /* Content Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        h1 { margin: 0 0 10px; font-size: 24px; }
-        p { color: #666; margin-bottom: 30px; line-height: 1.5; }
-        .btn {
-            display: inline-block;
-            background: #0070f3;
+
+        /* Header */
+        header {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 40px;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 150px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 40px 0 80px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--cyan);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 0 20px rgba(173, 255, 250, 0.3);
+        }
+
+        .metric {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
             color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 6px;
             font-weight: 600;
-            margin: 5px;
-            transition: background 0.2s;
         }
-        .btn:hover { background: #0051a2; }
-        .btn-outline {
+
+        .tagline {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--industrial-gray);
+            margin: 30px 0;
+            font-weight: 400;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .stat-card {
+            background: var(--gunmetal);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(173, 255, 250, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 30px rgba(173, 255, 250, 0.15);
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            color: white;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-description {
+            font-size: 0.95rem;
+            color: var(--industrial-gray);
+            line-height: 1.5;
+        }
+
+        /* Architecture Section */
+        .architecture {
+            background: var(--gunmetal);
+            padding: 60px 40px;
+            border-radius: 8px;
+            margin: 60px 0;
+            border: 1px solid rgba(173, 255, 250, 0.1);
+        }
+
+        .architecture h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            color: var(--cyan);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tier-card {
+            background: rgba(15, 18, 21, 0.6);
+            padding: 30px;
+            border-radius: 6px;
+            border-left: 4px solid var(--cyan);
+            border-right: 2px solid var(--sentry-gold);
+            transition: all 0.3s ease;
+        }
+
+        .tier-card:hover {
+            border-right-width: 4px;
+            box-shadow: 0 0 20px rgba(255, 200, 87, 0.2);
+        }
+
+        .tier-card h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tier-card ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .tier-card li {
+            padding: 8px 0;
+            color: var(--industrial-gray);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tier-card li:before {
+            content: "▹";
+            color: var(--cyan);
+            position: absolute;
+            left: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--sentry-gold);
+            color: var(--deep-void);
+            padding: 18px 40px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 200, 87, 0.3);
+            margin: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 200, 87, 0.5);
+        }
+
+        .btn-secondary {
+            display: inline-block;
             background: transparent;
-            border: 1px solid #ddd;
-            color: #333;
+            color: var(--cyan);
+            padding: 18px 40px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 2px solid var(--cyan);
+            transition: all 0.3s ease;
+            margin: 10px;
         }
-        .btn-outline:hover { border-color: #333; }
+
+        .btn-secondary:hover {
+            background: rgba(173, 255, 250, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gunmetal);
+            padding: 40px 0;
+            margin-top: 80px;
+            border-top: 1px solid rgba(173, 255, 250, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-content p {
+            color: var(--industrial-gray);
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-content a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .footer-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Trust Score Visualization */
+        .trust-score-section {
+            background: var(--gunmetal);
+            padding: 60px 40px;
+            border-radius: 8px;
+            margin: 60px 0;
+            border: 1px solid rgba(173, 255, 250, 0.1);
+        }
+
+        .trust-score-section h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            color: var(--cyan);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .trust-intro {
+            color: var(--industrial-gray);
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .concept-card {
+            background: rgba(15, 18, 21, 0.6);
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 4px solid var(--sentry-gold);
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            box-shadow: 0 0 25px rgba(255, 200, 87, 0.2);
+        }
+
+        .concept-title {
+            color: var(--sentry-gold);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .concept-description {
+            color: var(--industrial-gray);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .concept-example {
+            color: var(--cyan);
+            font-size: 0.95rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(173, 255, 250, 0.2);
+            font-style: italic;
+        }
+
+        .equation-visual {
+            display: none;
+        }
+
+        .equation-title {
+            display: none;
+        }
+
+        .equation {
+            display: none;
+        }
+
+        .equation-vars {
+            display: none;
+        }
+
+        .var-card {
+            display: none;
+        }
+
+        .var-symbol {
+            display: none;
+        }
+
+        .var-description {
+            display: none;
+        }
+
+        /* Use Case Cards */
+        .use-cases {
+            margin: 60px 0;
+        }
+
+        .use-cases h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            color: var(--cyan);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .use-case-card {
+            background: var(--gunmetal);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(173, 255, 250, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover {
+            border-color: var(--sentry-gold);
+            box-shadow: 0 0 30px rgba(255, 200, 87, 0.2);
+        }
+
+        .use-case-header {
+            background: rgba(15, 18, 21, 0.8);
+            padding: 25px;
+            border-bottom: 2px solid var(--sentry-gold);
+        }
+
+        .use-case-header h3 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .use-case-type {
+            color: var(--cyan);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .use-case-body {
+            padding: 25px;
+        }
+
+        .use-case-scenario {
+            color: var(--industrial-gray);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .use-case-benefits {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .use-case-benefits li {
+            padding: 8px 0;
+            color: var(--industrial-gray);
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .use-case-benefits li:before {
+            content: "✓";
+            color: var(--sentry-gold);
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tier-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .use-case-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .metric {
+                font-size: 1.5rem;
+            }
+            
+            .architecture {
+                padding: 40px 20px;
+            }
+            
+            .trust-score-section {
+                padding: 40px 20px;
+            }
+            
+            .stat-card, .concept-card, .tier-card, .use-case-card {
+                padding: 20px;
+            }
+            
+            .logo-container img {
+                max-height: 100px;
+            }
+            
+            header {
+                padding: 40px 0 20px;
+            }
+            
+            .hero {
+                padding: 20px 0 40px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
 
-    <div class="card">
-        <div class="profile-img"></div> 
-        
-        <h1>Your Name</h1>
-        <p>Cybersecurity Specialist & Systems Engineer.<br>Currently building tools for automation and resilience.</p>
-        
-        <a href="https://github.com/yourusername" class="btn">GitHub</a>
-        <a href="mailto:you@example.com" class="btn btn-outline">Contact</a>
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="SentryC2 - banner-dark.png" alt="SentryC2 Logo">
+            </div>
+        </header>
+
+        <section class="hero">
+            <h1>
+                <span class="metric">≥50% MTTR Reduction</span><br>
+                Under High-Loss Conditions
+            </h1>
+            <p class="tagline">Sustaining Industrial Operations in Disconnected Environments</p>
+        </section>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">H1: Resilience</div>
+                <div class="stat-value">≥50%</div>
+                <div class="stat-description">
+                    Edge-First MANET with Probabilistic Trust Scores (Γ) reduces MTTR compared to centralized cloud-auth under 20% packet loss
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">H2: Security Tax</div>
+                <div class="stat-value">+15%</div>
+                <div class="stat-description">
+                    Zero-Knowledge Proofs provide significantly higher System Trust Scores during adversarial injection, with controlled latency penalty
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">H3: Scalability</div>
+                <div class="stat-value">Non-Linear</div>
+                <div class="stat-description">
+                    MTTR for ZKP-based arbitration scales exponentially with Node Density due to cryptographic verification queuing
+                </div>
+            </div>
+        </div>
+
+        <section class="trust-score-section">
+            <h2>How SentryC2 Maintains Trust Without the Internet</h2>
+            <p class="trust-intro">
+                Traditional systems stop working when they lose internet connection because they can't verify if devices are authorized. 
+                SentryC2 solves this by letting devices trust each other directly, using a smart scoring system that adapts in real-time.
+            </p>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <div class="concept-title">Trust Score</div>
+                    <div class="concept-description">
+                        Every device gets a "trust score" that shows how reliable it is. The score goes up when devices verify each other 
+                        successfully, and slowly decreases over time if there's no activity. Think of it like a credit score for machines.
+                    </div>
+                    <div class="concept-example">
+                        Example: A factory robot starts at 50% trust. After successful verifications, it reaches 95% and stays operational even during internet outages.
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-title">Network Recovery</div>
+                    <div class="concept-description">
+                        When network connections break, traditional systems take minutes or hours to recover. SentryC2 recovers in under 
+                        half a second by using local mesh connections instead of waiting for cloud servers.
+                    </div>
+                    <div class="concept-example">
+                        Example: Internet goes down at 2:00 PM. Cloud systems halt by 2:15 PM. SentryC2 continues running with 500ms recovery.
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-title">Mesh Synchronization</div>
+                    <div class="concept-description">
+                        Devices communicate directly with nearby devices to share trust information, creating a "mesh network." 
+                        This means authorization works even when the internet is completely offline.
+                    </div>
+                    <div class="concept-example">
+                        Example: 10 devices on a factory floor stay synchronized with each other locally, updating trust scores every few seconds.
+                    </div>
+                </div>
+
+                <div class="concept-card">
+                    <div class="concept-title">Uptime Availability</div>
+                    <div class="concept-description">
+                        System availability measures how much time your operations actually run. SentryC2 maximizes this by eliminating 
+                        dependencies on unreliable cloud connections and minimizing recovery time.
+                    </div>
+                    <div class="concept-example">
+                        Example: Cloud-dependent systems: 85% uptime. SentryC2 with edge-first design: 99%+ uptime during the same network conditions.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="use-cases">
+            <h2>Real-World Application Scenarios</h2>
+            <div class="use-case-grid">
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <h3>Manufacturing Floor</h3>
+                        <div class="use-case-type">Industrial Sprint Tier</div>
+                    </div>
+                    <div class="use-case-body">
+                        <p class="use-case-scenario">
+                            Automotive assembly line experiences ISP outage during second shift. Cloud-based authorization 
+                            server becomes unreachable. Without SentryC2, all robotic systems halt within 15 minutes as 
+                            OAuth tokens expire.
+                        </p>
+                        <ul class="use-case-benefits">
+                            <li>MANET maintains authorization continuity using ECC verification</li>
+                            <li>Production continues with <500ms authorization recovery</li>
+                            <li>Trust scores propagate through on-premises mesh topology</li>
+                            <li>Zero production downtime during 4-hour outage</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <h3>Forward Operating Base</h3>
+                        <div class="use-case-type">Tactical Fortress Tier</div>
+                    </div>
+                    <div class="use-case-body">
+                        <p class="use-case-scenario">
+                            Defense logistics network operates in contested environment with adversarial injection attempts. 
+                            Satellite uplink intermittent. Critical supply chain authorization must remain operational 
+                            despite hostile conditions.
+                        </p>
+                        <ul class="use-case-benefits">
+                            <li>Schnorr ZKP provides mathematical privacy guarantees</li>
+                            <li>Adversarial nodes detected via trust score degradation</li>
+                            <li>Offline capability maintains mission-critical operations</li>
+                            <li>Opportunistic cloud sync when secure channels available</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="architecture">
+            <h2>Implementation Tiers</h2>
+            <div class="tier-grid">
+                <div class="tier-card">
+                    <h3>Industrial Sprint</h3>
+                    <ul>
+                        <li><strong>Cryptography:</strong> Elliptic Curve (ECC)</li>
+                        <li><strong>Target MTTR:</strong> &lt;500ms recovery</li>
+                        <li><strong>Use Case:</strong> Manufacturing floors, supply chain logistics</li>
+                        <li><strong>Environment:</strong> Standard industrial operations</li>
+                    </ul>
+                </div>
+
+                <div class="tier-card">
+                    <h3>Tactical Fortress</h3>
+                    <ul>
+                        <li><strong>Cryptography:</strong> Schnorr Zero-Knowledge Proofs</li>
+                        <li><strong>Security:</strong> Mathematical privacy guarantees</li>
+                        <li><strong>Use Case:</strong> Contested environments, defense logistics</li>
+                        <li><strong>Environment:</strong> High-threat operational theaters</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <p class="cta-text">🚧 SentryC2 is in early development phase. Research collaboration and pilot program inquiries welcome.</p>
+            <a href="mailto:contact@sentryc2.com" class="btn-primary">Reach Out for Information</a>
+            <a href="https://github.com/LukePepin/SentryC2" class="btn-secondary" target="_blank" rel="noopener">View GitHub Repository</a>
+        </section>
     </div>
 
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 SentryC2 Project. Licensed under <a href="LICENSE">Apache License 2.0</a>.</p>
+            <p>Edge-First Authorization for Industrial Cyber-Physical Systems</p>
+            <p><a href="mailto:contact@sentryc2.com">contact@sentryc2.com</a></p>
+        </div>
+    </footer>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#ADFFFA'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.4,
+                    random: true,
+                    anim: {
+                        enable: true,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: {
+                        enable: false
+                    }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ADFFFA',
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 0.8,
+                            color: '#FFC857'
+                        }
+                    },
+                    push: {
+                        particles_nb: 4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
 </body>
 </html>
