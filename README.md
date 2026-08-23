@@ -1,124 +1,82 @@
 # SentryC2
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Early%20Development-yellow.svg)]()
-[![Website](https://img.shields.io/badge/Website-sentryc2.com-cyan.svg)](https://lukepepin.github.io)
+[![Status](https://img.shields.io/badge/Status-Research%20Prototype-yellow.svg)]()
+[![Website](https://img.shields.io/badge/Website-sentryc2.com-cyan.svg)](https://www.sentryc2.com)
 
-**Sustaining Industrial Operations in Disconnected Environments**
+**Edge-delegated authorization for industrial robotics in DIL environments.**
 
-SentryC2 is an Edge-First industrial resilience framework that decouples authorization infrastructure from internet connectivity using Mobile Ad-hoc Networks (MANET), Zero-Knowledge Proofs, and Probabilistic Trust Scores.
+When connectivity fails, cloud-issued operating leases expire and robots halt — not because
+anything became unsafe, but because permission timed out in a datacenter they can no longer
+reach. SentryC2 moves the authorization decision onto hardened hardware beside the robot,
+keeps work running through the outage, and — when trust collapses — physically halts a live
+UR5 through a fail-safe hardware intercept.
 
----
-
-## The Problem
-
-Modern "Cloud-First" Industry 4.0 architectures create a critical single point of failure: centralized Identity Providers (IdP). When backhaul connectivity fails, authorization leases expire, triggering production halts that cost manufacturers **$400B annually** and threaten forward-deployed defense logistics.
-
-## The Solution
-
-SentryC2 implements a decentralized MANET architecture that:
-- **Reduces MTTR by ≥50%** under high-loss conditions (20% packet loss) compared to cloud-auth baselines
-- Maintains authorization continuity during network partitions
-- Provides cryptographic trust propagation through mesh topologies
+The name is the architecture: a **sentry** node standing watch beside the robot, holding
+**C2** — command and control — locally, where no outage can revoke it.
 
 ---
 
-## How It Works
+## The core contribution
 
-### Architecture Overview
+A latency model connecting verification cost to physical stop time, exercised across an
+extensive campaign of physical hardware trials on a live Universal Robots UR5. Under attack,
+the edge node's trust score decays geometrically each verification cycle; the time from attack
+onset to physical stop is the number of decay cycles multiplied by the cycle period, plus a
+detection offset. The model matched the ordering and magnitude of every condition tested, held
+out-of-sample in a pre-registered confirmatory campaign, and inverts into a design tool: given
+a stop-time budget, it returns which verification workloads and decay settings are admissible.
 
-```
-┌─────────────────────────────────────────────────────┐
-│           Edge Node (Industrial Device)              │
-│  ┌────────────────────────────────────────────┐    │
-│  │   Probabilistic Trust Score (Γ)            │    │
-│  │   • ZKP Verification                        │    │
-│  │   • Temporal Decay Function                 │    │
-│  │   • Mesh Reputation Propagation             │    │
-│  └────────────────────────────────────────────┘    │
-│                      ↕                              │
-│  ┌────────────────────────────────────────────┐    │
-│  │   MANET Authorization Layer                 │    │
-│  │   • Peer-to-Peer Trust Chains              │    │
-│  │   • Offline Capability                      │    │
-│  └────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────┘
-         ↕ (Opportunistic Sync)
-    ☁️ Cloud (When Available)
-```
+Qualitative findings:
 
-### Implementation Tiers
+- **Verification cost delays the stop.** Heavier cryptographic verification per cycle arrives
+  at the halt measurably later, in a predictable way.
+- **Outage duration decides whether a stop occurs.** Short outages ride through on residual
+  trust; outages that outlast the decay boundary end in a physical stop.
+- **Stronger proofs price into stop latency.** Privacy-preserving verification is affordable
+  for continuity but delays the stop — a trade the model prices explicitly.
 
-#### 1. **Industrial Sprint**
-- **Cryptography**: Elliptic Curve Cryptography (ECC)
-- **Target MTTR**: <500ms authorization recovery
-- **Use Case**: Manufacturing floors, supply chain logistics
+Quantitative detail lives in the thesis and is withheld from this public summary.
 
-#### 2. **Tactical Fortress**
-- **Cryptography**: Schnorr Zero-Knowledge Proofs
-- **Security Model**: Mathematical privacy guarantees
-- **Use Case**: Contested environments, defense logistics
+## Research integrity
 
-### Key Research Hypotheses
+Partway through the work, the experimental pipeline was audited against the firmware and raw
+telemetry. Two instrumentation defects were found — a stub cryptographic workload timed to fit
+a budget, and an experimental factor the firmware could not observe. The affected claims were
+**withdrawn in a verified-numbers ledger**, the firmware was fixed, and the campaigns were
+re-run clean with pre-registered acceptance criteria. The withdrawn claims are recorded
+alongside the results, corrected in the open.
 
-**H1 (Resilience)**: Edge-First MANET with Probabilistic Trust Scores (Γ) reduces MTTR by ≥50% compared to centralized cloud-auth under high-loss conditions (20% packet loss).
+## Standards position
 
-**H2 (Security Tax)**: Zero-Knowledge Proofs provide significantly higher System Trust Scores during adversarial injection than ECC, but incur latency penalties exceeding 15%.
+SentryC2 is exploratory research into authorization latency — **not** a validated functional
+safety architecture. It operates outside ISO 13849-1, ISO 13855, and IEC 62061; enforcement is
+single-channel (hardware fault tolerance of zero); and the latency model is average-case, not
+a worst-case execution bound. These limits define the roadmap:
 
-**H3 (Scalability)**: MTTR for ZKP-based arbitration scales exponentially with Node Density due to cryptographic verification queuing, compared to linear scaling in ECC.
+1. Independent supervision of the execution deadline (hardware watchdog)
+2. Genuine dual-channel enforcement with cross-monitoring
+3. A worst-case execution basis for the latency model
+4. A kinematically derived stop requirement (ISO 13855)
+5. Bounding the failover blind window
+6. The full physical attack campaign under genuine privacy-preserving verification
 
----
+## Website
 
-## Project Status
-
-🚧 **Early Development Phase**
-
-SentryC2 is currently in active research and development. The framework is not yet production-ready. We are validating core hypotheses through simulation and field testing.
-
-### Current Focus
-- [ ] MANET protocol implementation
-- [ ] Trust score propagation algorithms
-- [ ] ZKP integration and performance benchmarking
-- [ ] Industrial pilot program design
-
----
+The site ([www.sentryc2.com](https://www.sentryc2.com)) is a single page served from this
+repository via GitHub Pages: [index.html](index.html), with styles, scripts, and media under
+`assets/`. The project is a work in progress; the site reflects that.
 
 ## Contact
 
-For inquiries, research collaboration, or pilot program participation:
+Pilot design partners and research collaborators welcome.
 
-**Email**: [contact@sentryc2.com](mailto:contact@sentryc2.com)
-
-**Repository**: [github.com/LukePepin/SentryC2](https://github.com/LukePepin/SentryC2)
-
----
+**Email**: [contact@sentryc2.com](mailto:contact@sentryc2.com) · **Web**: [www.sentryc2.com](https://www.sentryc2.com)
 
 ## License
 
-Copyright © 2026 SentryC2 Project
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+Copyright © 2026 SentryC2 Project. Licensed under the [Apache License 2.0](LICENSE).
 
 ---
 
-## Acknowledgments
-
-Built on principles from:
-- Byzantine Fault Tolerance research
-- Federal Acquisition Regulation (FAR) Part 7 (Buy vs. Make analysis)
-- Industrial Cyber-Physical Systems (ICPS) standards
-- NIST Cybersecurity Framework
-
----
-
-*Edge-First Authorization for Industrial Cyber-Physical Systems*
+*Edge-delegated authorization for industrial robotics in DIL environments.*

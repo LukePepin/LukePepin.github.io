@@ -43,3 +43,21 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Source research documents — not for publication
+New Project Context/
+
+# Raw marketing assets (web-ready copies live in assets/)
+Marketing/
+
+# Claude Code local config
+.claude/
+
+# Root-level working media and logo drafts (web-ready copies live in assets/)
+/*.mp4
+/SentryC2 - logo 1_1_d2.svg
+/SentryC2 - logo 1_1_d3.svg
+
+# Lab footage stays off the public site and out of the public repo
+assets/demo-eviction.mp4
+assets/demo-poster.jpg
