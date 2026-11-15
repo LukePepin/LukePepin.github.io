@@ -26,7 +26,7 @@
       const b = document.createElement("button");
       b.className = "pill" + (S.name === n ? " on" : "");
       b.textContent = n;
-      b.onclick = () => { S.name = n; renderNames(); next(); };
+      b.onclick = () => { S.name = n; msg(0, ""); renderNames(); };
       $("#names").appendChild(b);
     });
   }
