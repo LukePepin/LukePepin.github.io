@@ -31,7 +31,7 @@
     <section data-step="1" hidden>
       <span class="sec">02 / Availability</span>
       <h2>Dates</h2>
-      <p class="lead">Choose a status, then select dates. Selecting a weekday heading applies the status to that entire column.</p>
+      <p class="lead">Every date starts as Busy. Mark the dates that work for you. Selecting a weekday heading applies the status to that entire column.</p>
       <div class="seg" id="brush">
         <button data-v="free" class="on"><i></i>Free</button>
         <button data-v="maybe"><i></i>If needed</button>
@@ -41,13 +41,13 @@
         <button class="chip" data-quick="all">Any day</button>
         <button class="chip" data-quick="weekend">Weekends</button>
         <button class="chip" data-quick="weeknight">Weeknights</button>
-        <button class="chip" data-quick="clear">Clear</button>
+        <button class="chip" data-quick="clear">All busy</button>
       </div>
       <div id="cal"></div>
       <div class="legend">
         <span><i style="background:var(--free);border-color:var(--free)"></i>Free</span>
         <span><i style="background:var(--maybe);border-color:var(--maybe)"></i>If needed</span>
-        <span><i style="background:var(--cell)"></i>Busy</span>
+        <span><i style="background:var(--cell)"></i>Busy (default)</span>
         <span><i style="background:var(--blocked);border-color:var(--blocked)"></i>Unavailable</span>
       </div>
       <p class="small" id="dayCount"></p>

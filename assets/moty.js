@@ -76,7 +76,7 @@
     const vals = Object.values(S.days);
     const f = vals.filter((v) => v.status === "free").length;
     const mb = vals.filter((v) => v.status === "maybe").length;
-    $("#dayCount").textContent = f + mb ? f + " free, " + mb + " if needed" : "No dates selected.";
+    $("#dayCount").textContent = f + mb ? f + " free, " + mb + " if needed, all others busy" : "All dates are busy. Select the dates that work.";
   }
 
   function paint(list, force) {
