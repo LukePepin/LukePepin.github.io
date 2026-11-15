@@ -18,6 +18,8 @@
   const msg = (n, text, ok) => { const m = $("#msg" + n); m.textContent = text || ""; m.classList.toggle("ok", !!ok); };
   const toggle = (arr, v) => (arr.includes(v) ? arr.filter((x) => x !== v) : arr.concat(v));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const has = (v) => (Array.isArray(v) ? v.length > 0 : !!v);
+  const show = (v) => (Array.isArray(v) ? v.join(", ") : v);
   const statusName = (st) => (st === "free" ? "Free" : "If needed");
 
   function renderNames() {
@@ -161,6 +163,66 @@
           o.appendChild(b);
         });
         w.appendChild(o);
+      } else if (q.type === "multi") {
+        const o = document.createElement("div");
+        o.className = "opts";
+        const cur = S.answers[q.id] || [];
+        q.options.forEach((opt) => {
+          const b = document.createElement("button");
+          b.className = "opt multi" + (cur.includes(opt) ? " on" : "");
+          b.textContent = opt;
+          b.onclick = () => {
+            S.answers[q.id] = toggle(S.answers[q.id] || [], opt);
+            msg(3, "");
+            renderQs();
+          };
+          o.appendChild(b);
+        });
+        w.appendChild(o);
+      } else if (q.type === "list") {
+        const max = q.max || 5;
+        const cur = S.answers[q.id] || [];
+        const ul = document.createElement("div");
+        ul.className = "namelist";
+        cur.forEach((name, k) => {
+          const row = document.createElement("div");
+          row.className = "nameitem";
+          row.innerHTML = "<span>" + esc(name) + "</span>";
+          const rm = document.createElement("button");
+          rm.textContent = "Remove";
+          rm.onclick = () => { S.answers[q.id] = cur.filter((_, j) => j !== k); renderQs(); };
+          row.appendChild(rm);
+          ul.appendChild(row);
+        });
+        if (cur.length < max) {
+          const add = document.createElement("div");
+          add.className = "nameadd";
+          const inp = document.createElement("input");
+          inp.type = "text";
+          inp.placeholder = q.placeholder || "";
+          inp.maxLength = 60;
+          inp.id = "add-" + q.id;
+          const btn = document.createElement("button");
+          btn.className = "btn";
+          btn.textContent = "Add";
+          const doAdd = () => {
+            const v = inp.value.trim();
+            if (!v) return;
+            if (!cur.some((x) => x.toLowerCase() === v.toLowerCase())) S.answers[q.id] = cur.concat(v);
+            S.refocus = inp.id;
+            renderQs();
+          };
+          btn.onclick = doAdd;
+          inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doAdd(); } });
+          add.appendChild(inp);
+          add.appendChild(btn);
+          ul.appendChild(add);
+        }
+        const count = document.createElement("div");
+        count.className = "small";
+        count.textContent = cur.length + " of " + max;
+        ul.appendChild(count);
+        w.appendChild(ul);
       } else {
         const el = document.createElement(q.type === "textarea" ? "textarea" : "input");
         if (q.type !== "textarea") el.type = "text";
@@ -172,6 +234,7 @@
       }
       box.appendChild(w);
     });
+    if (S.refocus) { const f = document.getElementById(S.refocus); if (f) f.focus(); S.refocus = null; }
   }
 
   function renderReview() {
@@ -183,7 +246,7 @@
       "<dt>Free (" + free.length + ")</dt><dd>" + (free.join("<br>") || "None") + "</dd>" +
       "<dt>If needed (" + maybe.length + ")</dt><dd>" + (maybe.join("<br>") || "None") + "</dd>";
     S.cfg.questions.filter(visible).forEach((q) => {
-      html += "<dt>" + esc(q.label) + "</dt><dd>" + (S.answers[q.id] ? esc(S.answers[q.id]) : "<span class='small'>No answer</span>") + "</dd>";
+      html += "<dt>" + esc(q.label) + "</dt><dd>" + (has(S.answers[q.id]) ? esc(show(S.answers[q.id])) : "<span class='small'>No answer</span>") + "</dd>";
     });
     $("#review").innerHTML = html;
   }
@@ -244,7 +307,7 @@
       return go(3);
     }
     if (S.step === 3) {
-      const miss = S.cfg.questions.filter(visible).find((q) => q.required && !S.answers[q.id]);
+      const miss = S.cfg.questions.filter(visible).find((q) => q.required && !has(S.answers[q.id]));
       if (miss) return msg(3, "Required: " + miss.label);
       return go(4);
     }
@@ -253,7 +316,7 @@
       const days = {};
       Object.keys(S.days).forEach((d) => (days[d] = { status: S.days[d].status, times: effTimes(d) }));
       const answers = {};
-      S.cfg.questions.filter(visible).forEach((q) => { if (S.answers[q.id]) answers[q.id] = S.answers[q.id]; });
+      S.cfg.questions.filter(visible).forEach((q) => { if (has(S.answers[q.id])) answers[q.id] = S.answers[q.id]; });
       try {
         await motyFetch("/api/submit", { name: S.name, days, answers });
         go(5);

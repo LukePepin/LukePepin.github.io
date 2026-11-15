@@ -113,13 +113,22 @@
     D.config.questions.forEach((q) => {
       const got = Object.entries(D.responses).filter(([, r]) => r.answers[q.id]);
       html += '<div class="q"><div class="ql">' + esc(q.label) + '</div><div class="qn">' + got.length + " answered</div>";
-      if (q.type === "choice") {
+      if (q.type === "choice" || q.type === "multi") {
         q.options.forEach((o) => {
-          const who = got.filter(([, r]) => r.answers[q.id] === o).map(([n]) => n);
+          const who = got.filter(([, r]) => (q.type === "multi" ? r.answers[q.id].includes(o) : r.answers[q.id] === o)).map(([n]) => n);
           const pct = got.length ? Math.round((100 * who.length) / got.length) : 0;
           html += '<div class="barrow"><div class="t"><i style="width:' + pct + '%"></i><span>' + esc(o) +
             (who.length ? ' <span class="small">(' + esc(who.join(", ")) + ")</span>" : "") + "</span></div><b>" + who.length + "</b></div>";
         });
+      } else if (q.type === "list") {
+        const tally = {};
+        got.forEach(([n, r]) => r.answers[q.id].forEach((g) => {
+          const k = g.toLowerCase();
+          tally[k] = tally[k] || { name: g, by: [] };
+          tally[k].by.push(n);
+        }));
+        html += Object.values(tally).sort((x, y) => y.by.length - x.by.length || x.name.localeCompare(y.name))
+          .map((t) => '<div class="txt"><b>' + esc(t.name) + "</b> " + t.by.length + ' <span class="small">(' + esc(t.by.join(", ")) + ")</span></div>").join("") || '<p class="small">No responses.</p>';
       } else {
         html += got.map(([n, r]) => '<div class="txt"><b>' + esc(n) + ":</b> " + esc(r.answers[q.id]) + "</div>").join("") || '<p class="small">No responses.</p>';
       }
@@ -149,7 +158,7 @@
     const head = ["name", "updated"].concat(qs.map((q) => q.id), days);
     const lines = [head];
     Object.entries(D.responses).forEach(([n, r]) => {
-      lines.push([n, r.updated].concat(qs.map((q) => r.answers[q.id] || ""),
+      lines.push([n, r.updated].concat(qs.map((q) => { const v = r.answers[q.id]; return Array.isArray(v) ? v.join("; ") : v || ""; }),
         days.map((d) => (r.days[d] ? r.days[d].status + ":" + r.days[d].times.join("|") : ""))));
     });
     const text = lines.map((l) => l.map((c) => '"' + String(c).replace(/"/g, '""') + '"').join(",")).join("\n");
