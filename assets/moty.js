@@ -172,7 +172,9 @@
           b.className = "opt multi" + (cur.includes(opt) ? " on" : "");
           b.textContent = opt;
           b.onclick = () => {
-            S.answers[q.id] = toggle(S.answers[q.id] || [], opt);
+            const ex = q.exclusive;
+            const rest = (S.answers[q.id] || []).filter((x) => x !== ex);
+            S.answers[q.id] = opt === ex ? (cur.includes(ex) ? [] : [ex]) : toggle(rest, opt);
             msg(3, "");
             renderQs();
           };
