@@ -120,6 +120,11 @@
           html += '<div class="barrow"><div class="t"><i style="width:' + pct + '%"></i><span>' + esc(o) +
             (who.length ? ' <span class="small">(' + esc(who.join(", ")) + ")</span>" : "") + "</span></div><b>" + who.length + "</b></div>";
         });
+        if (q.average && got.length) {
+          const nums = got.map(([, r]) => parseFloat(String(r.answers[q.id]).replace(/[^0-9.]/g, ""))).filter((x) => !isNaN(x));
+          const avg = nums.reduce((a, b) => a + b, 0) / nums.length;
+          html += '<div class="txt"><b>Average: $' + (Math.round(avg * 100) / 100) + "</b></div>";
+        }
       } else if (q.type === "list") {
         const tally = {};
         got.forEach(([n, r]) => r.answers[q.id].forEach((g) => {
