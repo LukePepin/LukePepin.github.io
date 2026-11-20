@@ -3,24 +3,20 @@
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  let PW = "", D = null, editing = false, blockedDraft = [], sel = null;
+  let D = null, sel = null;
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const label = (iso) => { const d = motyDate(iso); return WD[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate(); };
   const tlabel = (id) => (D.config.timeBlocks.find((t) => t.id === id) || { label: id }).label;
 
-  try { PW = sessionStorage.getItem("motyAdmin") || ""; } catch (e) {}
-
   async function load() {
     try {
-      D = await motyFetch("/api/admin/summary", { password: PW });
-      try { sessionStorage.setItem("motyAdmin", PW); } catch (e) {}
-      $("#login").hidden = true;
+      D = await motyFetch("/api/results");
+      $("#amsg").textContent = "";
       $("#main").hidden = false;
-      blockedDraft = (D.config.blockedDays || []).slice();
       render();
     } catch (e) {
-      $("#lmsg").textContent = e.offline ? "The server is unavailable." : e.message;
+      $("#amsg").textContent = e.offline ? "The server is unavailable. Please try again later." : e.message;
     }
   }
 
@@ -44,7 +40,7 @@
     $("#nMissing").textContent = missing.length;
     $("#missing").textContent = missing.length ? "Outstanding: " + missing.join(", ") : "All responses received.";
 
-    const days = motyDays(D.config).filter((d) => !blockedDraft.includes(d));
+    const days = motyDays(D.config).filter((d) => !D.config.blockedDays.includes(d));
     const ranked = days.map((d) => ({ d, s: dayStats(d) }))
       .filter((x) => x.s.score > 0)
       .sort((a, b) => b.s.free.length - a.s.free.length || b.s.maybe.length - a.s.maybe.length || a.d.localeCompare(b.d))
@@ -81,19 +77,14 @@
         cal.appendChild(m);
       }
       const b = document.createElement("button");
-      const isBlocked = blockedDraft.includes(iso);
+      const isBlocked = D.config.blockedDays.includes(iso);
       const s = dayStats(iso);
       const ratio = s.score / n;
-      b.className = "day" + (isBlocked ? " blocked" : ratio > 0 ? " h" : "") + (editing ? " edit" : "") + (sel === iso ? " sel" : "");
+      b.className = "day" + (isBlocked ? " blocked" : ratio > 0 ? " h" : "") + (sel === iso ? " sel" : "");
       if (!isBlocked && ratio > 0) b.style.background = "color-mix(in srgb, var(--free) " + Math.round(20 + 80 * ratio) + "%, var(--cell))";
       if (!isBlocked && ratio > 0 && ratio < 0.45) b.style.color = "var(--ink)";
       b.innerHTML = d.getDate() + (isBlocked ? "" : "<small>" + s.free.length + (s.maybe.length ? "+" + s.maybe.length : "") + "</small>");
-      b.onclick = () => {
-        if (editing) {
-          blockedDraft = isBlocked ? blockedDraft.filter((x) => x !== iso) : blockedDraft.concat(iso);
-          renderCal();
-        } else { sel = iso; renderCal(); showDay(iso); }
-      };
+      b.onclick = () => { sel = iso; renderCal(); showDay(iso); };
       grid.appendChild(b);
     });
   }
@@ -146,15 +137,9 @@
     const rows = Object.entries(D.responses).sort((a, b) => a[0].localeCompare(b[0])).map(([n, r]) => {
       const v = Object.values(r.days);
       return "<tr><td><b>" + esc(n) + '</b><br><span class="small">' + esc(r.updated.replace("T", " ")) + "</span></td><td>" +
-        v.filter((x) => x.status === "free").length + " free<br>" + v.filter((x) => x.status === "maybe").length + ' if needed</td><td style="text-align:right"><button class="chip" data-del="' + esc(n) + '">Delete</button></td></tr>';
+        v.filter((x) => x.status === "free").length + " free<br>" + v.filter((x) => x.status === "maybe").length + " if needed</td></tr>";
     });
     $("#people").innerHTML = rows.join("") || '<tr><td class="small">No responses.</td></tr>';
-    document.querySelectorAll("[data-del]").forEach((b) => (b.onclick = async () => {
-      const n = b.dataset.del;
-      if (!confirm("Delete the response from " + n + "?")) return;
-      try { await motyFetch("/api/admin/delete", { password: PW, name: n }); await load(); }
-      catch (e) { $("#amsg").textContent = e.message; }
-    }));
   }
 
   function csv() {
@@ -173,29 +158,7 @@
     a.click();
   }
 
-  $("#enter").onclick = () => { PW = $("#apw").value; load(); };
-  $("#apw").addEventListener("keydown", (e) => { if (e.key === "Enter") { PW = $("#apw").value; load(); } });
   $("#refresh").onclick = load;
   $("#csv").onclick = csv;
-  $("#editBlocked").onclick = () => {
-    editing = !editing;
-    $("#editBlocked").classList.toggle("on", editing);
-    $("#editBlocked").textContent = editing ? "Cancel" : "Edit unavailable dates";
-    $("#saveBlocked").hidden = !editing;
-    $("#editHint").hidden = !editing;
-    if (!editing) blockedDraft = (D.config.blockedDays || []).slice();
-    renderCal();
-  };
-  $("#saveBlocked").onclick = async () => {
-    try {
-      await motyFetch("/api/admin/blocked", { password: PW, blockedDays: blockedDraft });
-      editing = false;
-      $("#editBlocked").classList.remove("on");
-      $("#editBlocked").textContent = "Edit unavailable dates";
-      $("#saveBlocked").hidden = true;
-      $("#editHint").hidden = true;
-      await load();
-    } catch (e) { $("#amsg").textContent = e.message; }
-  };
-  if (PW) load();
+  load();
 })();
